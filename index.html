@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram Tools - Navdeep</title>
+<style>
+  body {font-family: 'Poppins', sans-serif; text-align: center; background: #fafafa; margin: 0; padding: 0;}
+  header {background: #e1306c; color: white; padding: 20px 0;}
+  input {padding: 10px; width: 80%; max-width: 400px; border-radius: 10px; border: 1px solid #ccc; margin: 10px;}
+  button {padding: 10px 20px; border: none; border-radius: 10px; background: #e1306c; color: white; font-size: 16px; cursor: pointer;}
+  button:hover {background: #c2185b;}
+  footer {margin-top: 30px; color: gray; font-size: 14px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📸 Instagram Tools</h1>
+  <p>Download Instagram Photos, Reels & Profiles — Free!</p>
+</header>
+
+<h3>Enter Instagram Post/Reel URL 👇</h3>
+<input type="text" id="url" placeholder="https://www.instagram.com/p/xyz..." />
+<br>
+<button onclick="download()">Download</button>
+
+<div id="result"></div>
+
+<footer>
+  <p>Created by <b>Navdeep</b> | 💰 Earn via Ads + Affiliate</p>
+</footer>
+
+<script>
+function download() {
+  const link = document.getElementById('url').value;
+  if(link.includes("instagram.com")){
+    window.open(`https://snapinsta.app/?url=${encodeURIComponent(link)}`, "_blank");
+  } else {
+    alert("कृपया सही Instagram लिंक डालें!");
+  }
+}
+</script>
+
+</body>
+</html>
