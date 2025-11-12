@@ -2,122 +2,49 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Instagram Downloader - Navdeep Tool</title>
+  <title>🎥 Instagram Downloader + Earn Tool</title>
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #111, #222);
-      color: white;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    h1 {
-      background: #ff0066;
-      padding: 15px;
-      margin: 0;
-      font-size: 24px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    }
-    input {
-      width: 80%;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      margin-top: 20px;
-      font-size: 16px;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 25px;
-      background-color: #ff0066;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover { background-color: #ff3388; }
-    video, img {
-      margin-top: 20px;
-      max-width: 90%;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-    }
-    .ads-box {
-      margin-top: 25px;
-      background: #1a1a1a;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 0 15px rgba(255,0,102,0.3);
-    }
-    .counter {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #ccc;
-    }
+    body { font-family: Arial; text-align:center; padding:20px; background:#f2f2f2; }
+    input, button { padding:10px; width:80%; max-width:400px; margin-top:10px; }
+    .ads { margin-top:30px; background:#fff; padding:15px; border-radius:10px; box-shadow:0 0 5px #ccc; }
   </style>
 </head>
 <body>
-  <h1>🎥 Instagram Downloader + Earn Tool</h1>
+  <h2>🎥 Instagram Downloader + Earn Tool</h2>
+  <input id="url" placeholder="अपना Instagram Reel लिंक डालें">
+  <button onclick="download()">Download Now</button>
+  <p id="msg"></p>
 
-  <input type="text" id="link" placeholder="यहाँ Instagram Reel या Video लिंक पेस्ट करें..." />
-  <br>
-  <button onclick="downloadMedia()">Download Now</button>
-
-  <div id="result"></div>
-
-  <div class="ads-box">
+  <div class="ads">
     <h3>💰 Sponsored Links / Affiliate Offers</h3>
-    <p>👇 इन offers से आप भी earning कर सकते हैं 👇</p>
-    <a href="https://amzn.to/3example" target="_blank" style="color:#00ccff;">🛍️ Amazon Best Deals</a><br>
-    <a href="https://bit.ly/affiliate-offer" target="_blank" style="color:#00ccff;">💸 Affiliate Signup (Free)</a><br>
-    <a href="https://t.me/yourchannel" target="_blank" style="color:#00ccff;">📲 Join Telegram Deals Channel</a>
-  </div>
-
-  <div class="counter">
-    👁️ Total Visitors: <span id="count">0</span>
+    <a href="https://amzn.to/affiliate">🛍️ Amazon Best Deals</a><br>
+    <a href="https://affiliate-program.amazon.in/">💸 Affiliate Signup (Free)</a><br>
+    <a href="https://t.me/dealschannel">📲 Join Telegram Deals Channel</a><br>
+    <p>👁️ Total Visitors: <span id="visitors">1</span></p>
   </div>
 
   <script>
-    async function downloadMedia() {
-      const url = document.getElementById("link").value.trim();
-      const resultDiv = document.getElementById("result");
-      if (!url) {
-        alert("कृपया Instagram लिंक डालें!");
-        return;
-      }
-      resultDiv.innerHTML = "<p>⏳ Downloading... कृपया प्रतीक्षा करें...</p>";
+    async function download() {
+      let reelUrl = document.getElementById("url").value;
+      if (!reelUrl) return alert("कृपया लिंक डालें");
+
+      document.getElementById("msg").innerText = "⏳ Processing...";
 
       try {
-        const response = await fetch("https://cached-knitting-pocket-children.trycloudflare.com/download", {
+        let res = await fetch("https://insta-backend-navdeepkumarnav.replit.app/download", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url })
+          body: JSON.stringify({ url: reelUrl })
         });
-
-        const data = await response.json();
-
-        if (data.media_url) {
-          if (data.media_url.includes(".mp4")) {
-            resultDiv.innerHTML = `<video controls src="${data.media_url}"></video><br><a href="${data.media_url}" download>⬇️ Download Video</a>`;
-          } else {
-            resultDiv.innerHTML = `<img src="${data.media_url}" alt="Instagram Image"><br><a href="${data.media_url}" download>⬇️ Download Image</a>`;
-          }
-        } else {
-          resultDiv.innerHTML = "<p>⚠️ Invalid or private post!</p>";
-        }
-      } catch (err) {
-        resultDiv.innerHTML = "<p>❌ Error: सर्वर से कनेक्ट नहीं हो पाया।</p>";
+        let data = await res.json();
+        if (data.result)
+          document.getElementById("msg").innerHTML = "✅ लिंक तैयार: <a href='" + data.result + "' target='_blank'>Download</a>";
+        else
+          document.getElementById("msg").innerText = "❌ Error: " + data.error;
+      } catch (e) {
+        document.getElementById("msg").innerText = "⚠️ सर्वर से कनेक्ट नहीं हो पाया।";
       }
     }
-
-    // Visitor Counter (local only)
-    let count = localStorage.getItem("visitorCount") || 0;
-    count++;
-    localStorage.setItem("visitorCount", count);
-    document.getElementById("count").innerText = count;
   </script>
 </body>
 </html>
