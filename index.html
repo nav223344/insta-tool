@@ -5,46 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Instagram Reels Downloader | Navdeep Tool</title>
   <style>
-    body { font-family: Arial; background: #f4f4f4; text-align: center; padding: 20px; }
-    h1 { color: #333; }
-    input { width: 90%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; }
-    button { background: #0078ff; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; }
-    button:hover { background: #005bd1; }
-    footer { margin-top: 30px; font-size: 14px; color: #555; }
-    .adbox { background: #fff; padding: 10px; border-radius: 8px; margin: 20px auto; width: 90%; box-shadow: 0 0 10px #ccc; }
+    body { font-family: Arial; background: #f9f9f9; text-align: center; padding: 20px; }
+    input,button { padding: 10px; border-radius: 8px; border:1px solid #ccc; width:90%; max-width:400px; margin:5px auto; display:block; }
+    button { background:#0078ff; color:#fff; border:none; cursor:pointer; }
+    button:hover { background:#005ad1; }
+    video { width:90%; margin-top:20px; border-radius:10px; }
+    footer { margin-top:30px; color:#555; font-size:14px; }
+    .adbox{margin-top:30px;background:#fff;padding:10px;border-radius:10px;box-shadow:0 0 5px #aaa;}
   </style>
 </head>
 <body>
-
-  <h1>📥 Insta Reels Downloader</h1>
-  <p>Paste your Instagram reel or post link below 👇</p>
-  <input id="url" type="text" placeholder="https://www.instagram.com/reel/xyz..." />
+  <h2>📥 Instagram Reels Downloader</h2>
+  <p>Paste your Instagram link 👇</p>
+  <input id="link" placeholder="https://www.instagram.com/reel/xyz/" />
   <button onclick="download()">Download</button>
-
   <div id="result"></div>
 
   <div class="adbox">
     <h3>💰 Sponsored Links</h3>
-    <p><a href="https://adsterra.com/?ref=YOUR_ID" target="_blank">Earn money by showing ads — Join Now</a></p>
-    <p><a href="https://affiliate-program.amazon.in/" target="_blank">Amazon Affiliate — Join Free</a></p>
+    <p><a href="https://adsterra.com/?ref=YOUR_ID" target="_blank">Show ads and earn money</a></p>
+    <p><a href="https://affiliate-program.amazon.in/" target="_blank">Amazon Affiliate – Join Free</a></p>
   </div>
 
-  <footer>
-    Created by <b>Navdeep</b> | All Rights Reserved © 2025
-  </footer>
+  <footer>Created by <b>Navdeep</b> © 2025</footer>
 
   <script>
-    function download() {
-      const link = document.getElementById('url').value;
-      if (!link.includes("instagram.com")) {
-        alert("कृपया सही Instagram लिंक डालें!");
-        return;
+    async function download(){
+      const url=document.getElementById('link').value.trim();
+      if(!url){alert("कृपया Instagram लिंक डालें");return;}
+      document.getElementById('result').innerHTML="⏳ Fetching...";
+      try{
+        const api=`https://instagram-media-downloader.p.rapidapi.com/rapid/post.php?url=${encodeURIComponent(url)}`;
+        const res=await fetch(api,{
+          headers:{
+            "x-rapidapi-key":"YOUR_RAPIDAPI_KEY",
+            "x-rapidapi-host":"instagram-media-downloader.p.rapidapi.com"
+          }
+        });
+        const data=await res.json();
+        if(data.media && data.media[0].download_url){
+          document.getElementById('result').innerHTML=
+            `<video controls src="${data.media[0].download_url}"></video>
+             <br><a href="${data.media[0].download_url}" download>⬇ Save Video</a>`;
+        }else{
+          document.getElementById('result').innerHTML="❌ Invalid or private post!";
+        }
+      }catch(e){
+        document.getElementById('result').innerHTML="⚠️ Error fetching data!";
       }
-      const encoded = encodeURIComponent(link);
-      // redirect system
-      window.open(`https://ssinstagram.com/?url=${encoded}`, "_blank");
     }
   </script>
-
 </body>
 </html>
