@@ -3,57 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Instagram Reels Downloader | Navdeep Tool</title>
+  <title>Instagram Downloader - Navdeep Tool</title>
   <style>
-    body { font-family: Arial; background: #f9f9f9; text-align: center; padding: 20px; }
-    input,button { padding: 10px; border-radius: 8px; border:1px solid #ccc; width:90%; max-width:400px; margin:5px auto; display:block; }
-    button { background:#0078ff; color:#fff; border:none; cursor:pointer; }
-    button:hover { background:#005ad1; }
-    video { width:90%; margin-top:20px; border-radius:10px; }
-    footer { margin-top:30px; color:#555; font-size:14px; }
-    .adbox{margin-top:30px;background:#fff;padding:10px;border-radius:10px;box-shadow:0 0 5px #aaa;}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #111, #222);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      background: #ff0066;
+      padding: 15px;
+      margin: 0;
+      font-size: 24px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    input {
+      width: 80%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 25px;
+      background-color: #ff0066;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background-color: #ff3388; }
+    video, img {
+      margin-top: 20px;
+      max-width: 90%;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    }
+    .ads-box {
+      margin-top: 25px;
+      background: #1a1a1a;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 0 15px rgba(255,0,102,0.3);
+    }
+    .counter {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #ccc;
+    }
   </style>
 </head>
 <body>
-  <h2>📥 Instagram Reels Downloader</h2>
-  <p>Paste your Instagram link 👇</p>
-  <input id="link" placeholder="https://www.instagram.com/reel/xyz/" />
-  <button onclick="download()">Download</button>
+  <h1>🎥 Instagram Downloader + Earn Tool</h1>
+
+  <input type="text" id="link" placeholder="यहाँ Instagram Reel या Video लिंक पेस्ट करें..." />
+  <br>
+  <button onclick="downloadMedia()">Download Now</button>
+
   <div id="result"></div>
 
-  <div class="adbox">
-    <h3>💰 Sponsored Links</h3>
-    <p><a href="https://adsterra.com/?ref=YOUR_ID" target="_blank">Show ads and earn money</a></p>
-    <p><a href="https://affiliate-program.amazon.in/" target="_blank">Amazon Affiliate – Join Free</a></p>
+  <div class="ads-box">
+    <h3>💰 Sponsored Links / Affiliate Offers</h3>
+    <p>👇 इन offers से आप भी earning कर सकते हैं 👇</p>
+    <a href="https://amzn.to/3example" target="_blank" style="color:#00ccff;">🛍️ Amazon Best Deals</a><br>
+    <a href="https://bit.ly/affiliate-offer" target="_blank" style="color:#00ccff;">💸 Affiliate Signup (Free)</a><br>
+    <a href="https://t.me/yourchannel" target="_blank" style="color:#00ccff;">📲 Join Telegram Deals Channel</a>
   </div>
 
-  <footer>Created by <b>Navdeep</b> © 2025</footer>
+  <div class="counter">
+    👁️ Total Visitors: <span id="count">0</span>
+  </div>
 
   <script>
-    async function download(){
-      const url=document.getElementById('link').value.trim();
-      if(!url){alert("कृपया Instagram लिंक डालें");return;}
-      document.getElementById('result').innerHTML="⏳ Fetching...";
-      try{
-        const api=`https://instagram-media-downloader.p.rapidapi.com/rapid/post.php?url=${encodeURIComponent(url)}`;
-        const res=await fetch(api,{
-          headers:{
-            "x-rapidapi-key":"YOUR_RAPIDAPI_KEY",
-            "x-rapidapi-host":"instagram-media-downloader.p.rapidapi.com"
-          }
+    async function downloadMedia() {
+      const url = document.getElementById("link").value.trim();
+      const resultDiv = document.getElementById("result");
+      if (!url) {
+        alert("कृपया Instagram लिंक डालें!");
+        return;
+      }
+      resultDiv.innerHTML = "<p>⏳ Downloading... कृपया प्रतीक्षा करें...</p>";
+
+      try {
+        const response = await fetch("https://cached-knitting-pocket-children.trycloudflare.com/download", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
         });
-        const data=await res.json();
-        if(data.media && data.media[0].download_url){
-          document.getElementById('result').innerHTML=
-            `<video controls src="${data.media[0].download_url}"></video>
-             <br><a href="${data.media[0].download_url}" download>⬇ Save Video</a>`;
-        }else{
-          document.getElementById('result').innerHTML="❌ Invalid or private post!";
+
+        const data = await response.json();
+
+        if (data.media_url) {
+          if (data.media_url.includes(".mp4")) {
+            resultDiv.innerHTML = `<video controls src="${data.media_url}"></video><br><a href="${data.media_url}" download>⬇️ Download Video</a>`;
+          } else {
+            resultDiv.innerHTML = `<img src="${data.media_url}" alt="Instagram Image"><br><a href="${data.media_url}" download>⬇️ Download Image</a>`;
+          }
+        } else {
+          resultDiv.innerHTML = "<p>⚠️ Invalid or private post!</p>";
         }
-      }catch(e){
-        document.getElementById('result').innerHTML="⚠️ Error fetching data!";
+      } catch (err) {
+        resultDiv.innerHTML = "<p>❌ Error: सर्वर से कनेक्ट नहीं हो पाया।</p>";
       }
     }
+
+    // Visitor Counter (local only)
+    let count = localStorage.getItem("visitorCount") || 0;
+    count++;
+    localStorage.setItem("visitorCount", count);
+    document.getElementById("count").innerText = count;
   </script>
 </body>
 </html>
